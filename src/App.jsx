@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { ArrowDown, ArrowRight, ArrowUpRight, Menu, X } from 'lucide-react'
 import gsap from 'gsap'
+import korallLogo from '../assets/korall-logo.png'
 
 const divisions = [
   {
@@ -129,6 +130,7 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const heroRef = useRef(null)
   const imageRef = useRef(null)
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
   useEffect(() => {
     const syncRoute = () => {
@@ -141,7 +143,7 @@ function App() {
 
   useEffect(() => {
     const context = gsap.context(() => {
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      const reduceMotion = prefersReducedMotion
       gsap.fromTo('.hero-copy > *', { y: reduceMotion ? 0 : 28, opacity: 0 }, {
         y: 0,
         opacity: 1,
@@ -165,7 +167,7 @@ function App() {
       })
     }, heroRef)
     return () => context.revert()
-  }, [active])
+  }, [active, prefersReducedMotion])
 
   const scrollTo = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
@@ -176,8 +178,7 @@ function App() {
     <main ref={heroRef}>
       <header className="site-header">
         <a className="brand" href="#brawl" aria-label="KORALL, inicio">
-          <span className="brand-mark">K<span>·</span></span>
-          <span className="brand-name">KORALL<span>®</span></span>
+          <img className="brand-logo" src={korallLogo} alt="" />
         </a>
         <nav className={`main-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Navegación principal">
           <a className="nav-link" href="#brawl" onClick={() => setMenuOpen(false)}>Brawl Stars</a>
@@ -202,16 +203,16 @@ function App() {
             <a className="text-link" href="mailto:hola@korall.team?subject=Quiero%20formar%20parte%20de%20KORALL">QUIERO COMPETIR <ArrowUpRight size={14} /></a>
           </div>
           <div className="hero-proof">
-            <div className="avatar-stack" aria-hidden="true"><span>K</span><span>R</span><span>L</span></div>
+            <div className="avatar-stack" aria-hidden="true"><span className="avatar-logo"><img src={korallLogo} alt="" /></span><span className="avatar-count">08</span></div>
             <span>UNA COMUNIDAD.<br /><strong>MUCHAS FORMAS DE COMPETIR.</strong></span>
           </div>
         </div>
 
         <div className="hero-visual" ref={imageRef}>
-          <img src={photoUrl(active.image)} alt={active.imageAlt} fetchPriority="high" />
+          <video className="hero-video" src="https://videos.pexels.com/video-files/854053/854053-hd_1920_1080_25fps.mp4" poster={photoUrl(active.image)} autoPlay={!prefersReducedMotion} muted loop playsInline preload="none" aria-label={active.imageAlt} />
           <div className="image-grain" />
-          <div className="visual-top"><span>KR / {active.number}</span><span>EST. MMXXIV</span></div>
-          <div className="visual-stamp" aria-hidden="true"><span>KORALL</span><span>NO LIMITS<br />JUST LEVELS</span><span>◉</span></div>
+          <div className="visual-top"><span className="visual-brand"><img src={korallLogo} alt="" /> / {active.number}</span><span>EST. MMXXIV</span></div>
+          <div className="visual-stamp" aria-hidden="true"><img src={korallLogo} alt="" /><span>NO LIMITS<br />JUST LEVELS</span><span>◉</span></div>
           <div className="visual-bottom"><div><span className="visual-label">{active.caption}</span><strong>{active.name}</strong></div><span className="visual-stat">{active.stat}</span></div>
           <span className="hero-index">{active.number}<i> / 08</i></span>
         </div>
@@ -262,7 +263,7 @@ function App() {
       </section>
 
       <footer className="site-footer">
-        <a className="brand footer-brand" href="#brawl"><span className="brand-mark">K<span>·</span></span><span className="brand-name">KORALL<span>®</span></span></a>
+        <a className="brand footer-brand" href="#brawl" aria-label="KORALL, inicio"><img className="brand-logo" src={korallLogo} alt="" /></a>
         <span className="footer-note">COMPETIR ES SOLO EL PRINCIPIO.</span>
         <div className="footer-links"><a href="mailto:hola@korall.team">CONTACTO <ArrowUpRight size={13} /></a><a href="#brawl">INSTAGRAM <ArrowUpRight size={13} /></a></div>
         <span className="copyright">© KORALL 2025</span>
